@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="row justify-content-center mt-4 mb-4">
+    <center><h1>{% block title %} Editar Perfil {% endblock  %}</h1></center>            
+</div>
+
+    <div class="row justify-content-center">
+        <div class="media">
+            <img class="rounded-circle account img mr-5" width="145px" Height="145px" src="{{ user.profile.image.url }}">
+            <div class="media-body mt-4">
+                <h2 class="account-heading">{{ user.username }}</h2>
+                <p class="text-secondary">{{ user.email }}</p>
+            </div> 
+        </div>
+    </div>
+   
+    <form novalidate method="POST" enctype="multipart/form-data" class="form-group" action="">
+        {% csrf_token %}
+        <div class="row justify-content-center">
+            <div class="col-6 ml-1">
+                <label for="username" class="form-label ml-3 mt-3">Nombre de usuario</label>
+                {{u_form.username}}
+                {{u_form.username.errors}}
+            </div>
+            <div class="col-6 ml-0">
+                <label for="inputAddress2" class="form-label ml-3 mt-3">E-mail</label>
+                {{u_form.email}}
+                {{u_form.email.errors}}
+            </div>
+        </div>
+        <div class="text-center mt-5">
+            {{p_form.image}}
+        </div>
+        <div class="row justify-content-center ml-5 mt-4 mb-0 mr-5">
+            {% for message in messages %}
+                <p id="messages">{{message}}</p>
+            {% endfor %}
+        </div>
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary ml-5 mt-4 mb-3 mr-5">Actualizar</button>
+        </div>
+    </form>
+
+
+{% endblock  %}
