@@ -1,0 +1,6 @@
+db.sqlite3
+/gestion/__pycache__/
+/__pycache__/
+
+GestionDeTurnos/GestionDeTurnos/__pycache__/
+GestionDeTurnos/gestion/__pycache__/
