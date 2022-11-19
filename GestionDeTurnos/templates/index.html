@@ -8,7 +8,7 @@
 <label>Especialidad:</label>
 <select>
     {% for especialidad in especialidades %}
-    <option>{{ especialidad }}</option>
+    <option>{{ especialidad.nombre }}</option>
     {% endfor %}
 </select>
 <label for="ciudad">Ciudad</label>

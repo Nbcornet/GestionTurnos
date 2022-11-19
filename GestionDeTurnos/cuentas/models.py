@@ -30,3 +30,4 @@ class Profile(models.Model):
 
 # class medico(models.Model):
     # user = models.OneToOneField(User, on_delete=models.CASCADE) # CASCADE, al eliminar el usuario, elimina el profile
+
