@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -127,3 +128,11 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+=======
+db.sqlite3
+/gestion/__pycache__/
+/__pycache__/
+
+GestionDeTurnos/GestionDeTurnos/__pycache__/
+GestionDeTurnos/gestion/__pycache__/
+>>>>>>> 1b2276db3ff0634200fdf24948019473407ad988
