@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="px-4 py-5 text-center">
+
+    <img class="d-block mx-auto mb-2" src="{% static '/img/kundalini_circle.png'%}" alt="" width="72" height="72">
+    <h1 class="display-5 fw-bold">Busca profecionales en tu ciudad</h1>
+    <div class="col-lg-6 mx-auto">
+      <p class="lead mb-4 my-4">Una forma facil y simple de buscar los mejores profecionales dentro de tu ciudad, vas a encontrar la mas amplia variedad.</p>
+      <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+        <form class="d-flex justify-content-between gap-2 w-100" role="search">
+            <select class="form-select form-select" aria-label=".form-select example">
+            
+                <option selected>Especialidades</option>
+                {% for especialidad in especialidades %}
+                <option value="{{ especialidad.id }}">{{ especialidad.nombre }}</option>
+                {% endfor %}
+            </select>
+            <input type="search" class="form-control" placeholder="Ciudad..." aria-label="Search">
+        </form>
+      </div>
+      <button type="button" class="btn btn-outline-secondary btn-lg px-4 my-4">Buscar</button>
+
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<section class="container">
+    <div class="d-flex justify-content-between align-items-center mt-4 mb-2">
+        <h1>Tu agenda</h1>
+        <a href="{% url 'gestion:crear_agenda' %}" class="btn btn-primary">Crear agenda</a>
+    </div>
+
+
+    <div class="row">
+        <div class="col-12">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">Nombre</th>
+                        <th scope="col">Especialidad</th>
+                        <th scope="col">Fecha</th>
+                        <th scope="col">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for agenda in agendas %}
+                        <tr>
+                            <td>{{agenda.hospital}}</td>
+                            <td>{{agenda.especialidad}}</td>
+                            <td>{{agenda.fecha}}</td>
+
+                            <td>
+                                <a href="{% url 'gestion:editar_agenda' agenda.id %}" class="btn btn-primary">Editar</a>
+                                <a href="{% url 'gestion:eliminar_agenda' agenda.id %}" class="btn btn-danger">Eliminar</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+</section>
+
+{% endblock  %}

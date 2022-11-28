@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<section class="container">
+    <div class="row justify-content-center mt-4 mb-4">
+        <h1 class="text-center">{% block title %} Registración Pacientes {% endblock %}</h1>
+    </div>
+    {% for message in messages %}
+        <div class="alert alert-primary text-center mr-3" role="alert">
+            {{ message }}
+        </div>
+    {% endfor %}
+    
+        <form novalidate method="POST" class="form-group py-4" action="">
+            {% csrf_token %}
+    
+            <div class="w-100 d-flex flex-column flex-md-row flex-wrap" >
+                <div class="col col-md-6">
+                    <div class="mw-100 px-3">
+                        {{form.visible_fields|slice:":4"|crispy}}
+                    </div>
+                </div>
+                <div class="col col-md-6">
+                    <div class="mw-100 px-3">
+                        {{form.visible_fields|slice:"4:"|crispy}}
+                    </div>
+                </div>
+            </div>
+    
+            <div class="mt-2">
+                <div class="d-flex justify-content-center links">
+                    <span class="mx-1">¿Tenes una cuenta? Cliqueá </span>
+                    <a href="{% url 'cuentas:login' %}" class="ml-2 mb-4"> acá</a>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-center w-100">
+                <button type="submit" class="btn btn-primary w-50">Registrarse</button>
+            </div>
+        </form>
+    
+</section>
+
+{% endblock %}
