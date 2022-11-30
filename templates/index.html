@@ -9,17 +9,25 @@
     <div class="col-lg-6 mx-auto">
       <p class="lead mb-4 my-4">Una forma facil y simple de buscar los mejores profecionales dentro de tu ciudad, vas a encontrar la mas amplia variedad.</p>
       <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
-        <form class="d-flex justify-content-between gap-2 w-100" role="search">
-            <select class="form-select form-select" aria-label=".form-select example">
+        <form method="POST" action="{% url 'gestion:index' %}" class="d-flex justify-content-between gap-2 w-100" role="search">
+          {% csrf_token %}
+          {{ form }}
             
-                <option selected>Especialidades</option>
-                {% for especialidad in especialidades %}
-                <option value="{{ especialidad.id }}">{{ especialidad.nombre }}</option>
-                {% endfor %}
-            </select>
+          <input type="submit" value="FILTER"> 
+          {% comment %} <select class="form-select form-select" aria-label=".form-select example"> {% endcomment %}
+                {% comment %} <option selected>Especialidades</option> {% endcomment %}
+                {% comment %} {% for especialidad in especialidades %} {% endcomment %}
+                {% comment %} <option value="{{ especialidad.id }}">{{ especialidad.nombre }}</option> {% endcomment %}
+                {% comment %} {% endfor %} {% endcomment %}
+            {% comment %} </select> {% endcomment %}
             <input type="search" class="form-control" placeholder="Ciudad..." aria-label="Search">
         </form>
       </div>
+      {% if agendas %}
+        {% for agenda in agendas %}
+        <h2>{{ agenda.hospital }} :: {{ agenda.especialidad }} :: {{ agenda.fecha }}</h2>
+        {% endfor %}
+      {% endif %}
       <button type="button" class="btn btn-outline-secondary btn-lg px-4 my-4">Buscar</button>
 
     </div>

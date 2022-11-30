@@ -24,7 +24,7 @@ hospitales = (
 
 class Especialidades(models.Model):
     nombre = models.CharField(max_length=100, choices=department)
-    codigo = models.CharField(max_length=50, unique=True)
+    codigo = models.IntegerField(unique=True)
     descripcion = models.TextField(max_length=500)
 
     def __str__(self):

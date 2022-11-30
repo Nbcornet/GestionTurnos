@@ -1,5 +1,5 @@
 from django import forms
-from .models import Agenda
+from .models import Agenda, Especialidades
 from datetime import datetime
 
 class AgendaForm(forms.ModelForm):
@@ -87,5 +87,13 @@ class AgendaForm(forms.ModelForm):
             agenda.save()
         return agenda
 
+class EspecialidadesForm(forms.ModelForm):
+    nombre = forms.ModelChoiceField(queryset=Especialidades.objects.values_list('nombre', flat=True), 
+                                    label='Especialidad',
+                                    initial={'nombre':'Dentistry'})
+
+    class Meta:
+        model = Especialidades
+        fields = ["nombre"]
 
 

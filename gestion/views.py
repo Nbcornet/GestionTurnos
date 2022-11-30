@@ -6,18 +6,32 @@ from .models import *
 #
 from django.urls import reverse_lazy
 from django.views import generic
-from .forms import AgendaForm
+from .forms import AgendaForm, EspecialidadesForm
 from datetime import datetime, timedelta
 from .mixins import MedicoMixin
 # Create your views here.
 
 
 def index(request):
-    especialidades = Especialidades.objects.all()
-    contexto = {
-        "especialidades": especialidades,  
-        }
-    return render(request,'index.html', contexto)
+    # form = EspecialidadesForm(initial={'nombre':'Dentistry'})
+    # especialidades = Especialidades.objects.all()
+    # contexto = {
+    #     "especialidades": especialidades,  
+    #     }
+    print(request.method, request.POST.get('nombre'))
+    form = EspecialidadesForm
+    if request.POST.get('nombre') != None:
+        
+        especialidad = Especialidades.objects.values_list('nombre', flat=True).filter(nombre=request.POST.get('nombre'))
+        print(especialidad[0])
+        
+        agendas = Agenda.objects.filter(especialidad=especialidad[0])
+        print(agendas)
+
+        form = EspecialidadesForm(initial={'nombre':request.POST.get('nombre')})
+        return render(request,'index.html', {"agendas": agendas,'form':form})
+
+    return render(request,'index.html', {"form": form})
 
 class AgendaCrear(MedicoMixin,generic.View):
     template_name = 'gestion/crear_agenda.html'
@@ -97,7 +111,6 @@ class editar_agenda(MedicoMixin, generic.UpdateView):
 
 
 def eliminar_agenda(request,id_agenda):
-    
     turno = Agenda.objects.get(pk=id_agenda)
     turno.soft_delete()
     return redirect('gestion:lista_agenda')
