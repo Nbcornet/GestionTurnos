@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+
+
+<section class="container">
+    <div class="row justify-content-center mt-4 mb-4">
+        <center><h1>{% block title %} Reservar Turno {% endblock  %}</h1></center>            
+    </div>
+
+    {% comment %} <center><h1> {{ id }} </h1></center>   {% endcomment %}
+
+    <form method="POST" class="form-group py-4" action="">
+        {% csrf_token %}
+    
+        <div class="row justify-content-center w-50 mx-auto">
+            <div>
+                {{form|crispy}}
+            </div>
+        
+            <div class="row justify-content-center ml-5 mt-4 mb-0 mr-5">
+                {% for message in messages %}
+                    <p id="messages">{{message}}</p>
+                {% endfor %}
+            </div>
+
+            <div class="d-flex justify-content-center">
+                <button type="submit" class="btn btn-primary me-2 w-50">Reservar</button>
+                <a href="{% url 'gestion:index' %}" class="btn btn-secondary w-50">Cancelar</a> 
+            </div>
+
+        </div>
+    </form>
+
+</section>
+
+{% endblock  %}

@@ -1,96 +1,56 @@
 {% load static %}
 
-{% comment %} <nav class="navbar navbar-expand-lg navbar-light bg-light"> {% endcomment %}
-<nav class="navbar navbar-expand-lg navbar-light" style="background-color: #E5E8E8;>
-  {% comment %} <a class="navbar-brand" href="#">Home</a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button> {% endcomment %}
-  <div class="collapse navbar-collapse" id="navbarNavDropdown">
-    <a href="/"><img src="{% static '/img/kundalini_circle.png'%}" width="45px" height="45px"></a>        
-    <ul class="navbar-nav">
-      {% comment %} <li class="nav-item active">
-          <a class="nav-link" href="#">Home</a>
-      </li>
-      <li class="nav-item active">
-        <a class="nav-link" href="#">Servicios</a>
-      </li> {% endcomment %}
-      <li class="nav-item">
-        <a class="nav-link" href="/">Home</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Servicios</a>
-      </li>
+<header class="p-3 mb-3 border-bottom">
+  <div class="container">
+    <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+      <a href="/"><img src="{% static '/img/kundalini_circle.png'%}" width="45px" height="45px"></a>        
 
-      {% if request.user.is_authenticated and request.user.is_medico %}
-      {% comment %} {% if request.user.is_authenticated and request.user.group == 'medico' %} {% endcomment %}
 
-      <li class="nav-item dropdown"> 
+      <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+        <li><a href="/" class="nav-link px-2 link-dark">Home</a></li>
+        {% if  request.user.is_authenticated and request.user.is_medico %}
+          <li><a href="{% url 'gestion:lista_agenda' %}" class="nav-link px-2 link-dark">Agenda</a></li>
+          <li><a href="{% url 'gestion:mis_pacientes' %}" class="nav-link px-2 link-dark">Pacientes</a></li>
+        {% elif  request.user.is_authenticated and request.user.is_paciente %}
+          <li><a href="{% url 'gestion:mis_turnos' %}" class="nav-link px-2 link-dark">Mis turnos</a></li>
+        {% endif %}
+      </ul>
 
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      {% if request.user.is_authenticated %}
+
+      <div class="dropdown text-end">
+        <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+          <img src="{{ user.image.url }}" alt="mdo" width="32" height="32" class="rounded-circle">&nbsp;
           {{request.user.first_name}}
         </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink"> 
-          <a class="dropdown-item" href="{% url 'editar_perfil_medico' %}">EDITAR PERFIL</a>
-          <a class="dropdown-item" href="#">PACIENTES</a>
-          <a class="dropdown-item" href="#">CONSULTAS</a>
-          <a class="dropdown-item" href="#">AGENDA</a>
-          <a class="dropdown-item" href="{% url 'logout' %}">LOGOUT</a>
-        </div
-      </li>
-      
-      {% elif request.user.is_authenticated and request.user.is_paciente %}
 
-      <li class="nav-item dropdown"> 
+        <ul class="dropdown-menu text-small">
+          {% if request.user.is_medico %}
+          <li><a class="dropdown-item" href="{% url 'cuentas:editar_perfil_medico' %}">Perfil</a></li>
+          {% elif request.user.is_paciente %}
+          <li><a class="dropdown-item" href="{% url 'cuentas:editar_perfil_paciente' %}">Perfil</a></li>
+          {% endif %}
+          <li><hr class="dropdown-divider"></li>
+          <li><a class="dropdown-item" href="{% url 'cuentas:logout' %}">Logout</a></li>
+        </ul>
 
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          {{request.user.first_name}}
-        </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-          <a class="dropdown-item" href="{% url 'editar_perfil_paciente' %}">EDITAR PERFIL</a>
-          <a class="dropdown-item" href="{% url 'logout' %}">LOGOUT</a>
-        </div
-      </li>
-       
-      {% elif request.user.is_authenticated and request.user.is_admin %}
-
-      <li class="nav-item dropdown"> 
-
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          {{request.user.first_name}}
-        </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-          <a class="dropdown-item" href="{% url 'logout' %}">LOGOUT</a>
-        </div
-      </li>
+      </div>
 
       {% else %}
 
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Registracion
-        </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-          <a class="dropdown-item" href="/registracion/medico">Medicos</a>
-          <a class="dropdown-item" href="/registracion/paciente">Pacientes</a>
-          {% comment %} <a class="dropdown-item" href="#">Something else here</a> {% endcomment %}
-        </div>
-        {% comment %} <li>
-        <button type="button" class="btn btn-white" data-toggle="tooltip" data-placement="right" title="Tooltip on right">
-          Tooltip on right
-        </button>
-        </li> {% endcomment %}
-        <li class="nav-item">
-          <a class="nav-link" href="/login">Login</a>
-        </li>
-      </li>
+      <div class="text-end">
+        <a href="{% url 'cuentas:login' %}" class="btn btn-outline-primary me-2">Login</a>
+          <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+            Registrarse
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+            <li><a class="dropdown-item" href="{% url 'cuentas:registracion_medico' %}">Medico</a></li>
+            <li><a class="dropdown-item" href="{% url 'cuentas:registracion_paciente' %}">Paciente</a></li>
+          </ul>
+      </div>
+      
       {% endif %}
-    </ul>
-  </div>
 
-  {% comment %} <div class="navbar-nav ml-auto mr-4"> {% endcomment %}
-  {% comment %} <span class="mr-2">Hello, {{request.user}}</span> {% endcomment %}
-  {% comment %} <span><a href="{% url 'logout' %}">Logout</a></span> {% endcomment %}
-  {% comment %} </div> {% endcomment %}
-    
-</nav>
+    </div>
+  </div>
+</header>

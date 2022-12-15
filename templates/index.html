@@ -1,18 +1,120 @@
-{% extends './base.html' %}
-
-{% block titulo %}Home | Care Turnos{% endblock titulo %}
+{% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
-<h1>{{ titulo | title }}</h1>
-<p>{{ descripcion }}</p>
-<label>Especialidad:</label>
-<select>
-    {% for especialidad in especialidades %}
-    <option>{{ especialidad.nombre }}</option>
-    {% endfor %}
-</select>
-<label for="ciudad">Ciudad</label>
-<input type="text" id="ciudad" name="ciudad" placeholder="Ej: Balvanera">
-<input type="submit" value="Encontrar">
+<div class="px-4 py-5 text-center">
+
+    <img class="d-block mx-auto mb-2" src="{% static '/img/kundalini_circle.png'%}" alt="" width="72" height="72">
+    <h1 class="display-5 fw-bold">Busca profecionales en tu ciudad</h1>
+    <div class="col-lg-6 mx-auto">
+      <p class="lead mb-4 my-4">Una forma facil y simple de buscar los mejores profesionales dentro de tu ciudad, vas a encontrar la mas amplia variedad.</p>
+      <div class="d-flex flex-sm-row gap-2">
+        <form method="POST" action="{% url 'gestion:index' %}" class="" role="search">
+          {% csrf_token %}
+          <!-- {{ form }} -->
+          <div class="d-flex flex-sm-row justify-content-between gap-2 w-100">
+            <select required class="form-select form-select" aria-label=".form-select example" id="especialidad" name="especialidad">
+              {% if especialidad_value == "" %}
+                <option value=''  selected>Especialidades</option>
+                {% for especialidad in especialidades %}
+                  <option value="{{ especialidad.id }}">{{ especialidad.nombre }}</option>
+                {% endfor %}
+              {% else %}
+                <option value='{{especialidad_value}}'  selected>{{nombre_especialidad}}</option>
+                {% for especialidad in especialidades %}
+                  <option  value="{{ especialidad.id }}">{{ especialidad.nombre }}</option>
+                {% endfor %}
+                <option  value="">Todas</option>
+              {% endif %}
+            </select>
+        
+            <select required class="form-select form-select" aria-label=".form-select example" id="hospital" name="hospital">
+              <option  value='' selected>Hospitales</option>
+              {% if hospital_value == "" %}
+                <option  value='' selected>Hospitales</option>
+                {% for hospital in hospitales %}
+                  <option  value="{{ hospital.id }}">{{ hospital.nombre }}</option>
+                {% endfor %}
+              {% else %}
+                <option  value='{{hospital_value}}' selected>{{nombre_hospital}}</option>
+                {% for hospital in hospitales %}
+                  <option value="{{ hospital.id }}">{{ hospital.nombre }}</option>
+                {% endfor %}
+                <option  value="">Todos</option>
+              {% endif %}
+            </select>
+
+            <div class="form-control">
+              <label for="start">
+                Desde:
+                <input required type="date" class="date form-control" id="start" value="{{date_start_before}}" name="date-start" min="2022-01-01"
+                  max="2024-01-01">
+              </label>
+            </div>
+      
+            <div class="form-control">
+              <label for="end">
+                Hasta:
+                <input required type="date" class="date form-control" id="end" value="{{date_end_before}}" name="date-end" min="2022-01-01"
+                  max="2024-01-01">
+              </label>
+            </div>
+
+          </div>
+          
+          <button type="submit" class="btn btn-outline-secondary btn-lg px-4 my-4">Buscar</button>
+          
+        </form>
+      </div>
+
+
+
+</div>
+
+{% if table %}
+<div class="table-wrapper">
+  <table class="fl-table" id="myTable">
+    <thead>
+      <tr>
+        <th>Código <i class="fa-solid fa-sort"></i></th>
+        <th>Medico <i class="fa-solid fa-sort"></i></th>
+        <th>Hospital <i class="fa-solid fa-sort"></i></th>
+        <th>Especialidad <i class="fa-solid fa-sort"></i></th>
+        <th>Fecha <i class="fa-solid fa-sort"></i></th>
+        <th>Hora <i class="fa-solid fa-sort"></i></th>
+        {% comment %} <th>Reservar <i class="fa-solid fa-circle-play"></i></th> {% endcomment %}
+        <th>Reservar </th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {% if agendas %}
+      {% for agenda in agendas %}
+      <tr id="{{ agenda.id }}">
+        <td class="tdbreak">{{ agenda.id }}</td>
+        <td class="tdbreak">{{ agenda.user__first_name }} {{ agenda.user__last_name }}</td>
+        <td class="tdbreak">{{ agenda.hospital__nombre }}</td>
+        <td class="tdbreak">{{ agenda.especialidad__nombre }}</td>
+        <td class="tdbreak">{{ agenda.fecha|date:"d/m/y"}}</td>
+        <td class="tdbreak">{{ agenda.fecha|date:"H:i:s"}}</td> 
+        <td>
+        <a href="{% url 'gestion:turno_paciente' agenda.id %}"><button type="submit" value="{{ agenda.id }}" name="{{ agenda.id }}" id="tag-download_{{ agenda.id }}"
+              {% comment %} onclick="">Reservar <i class="fa-solid fa-file-audio"></i> {% endcomment %}
+        onclick="">Reservar </button></a>
+        </td>
+      </tr>
+      {% endfor %}
+      {% endif %}
+    <tbody>
+  </table>
+</div>
+{% endif %}
+
+<div class="row justify-content-center ml-5 mt-4 mb-0 mr-5">
+  {% for message in messages %}
+      <p id="messages">{{message}}</p>
+  {% endfor %}
+</div>
+</div>
 
 {% endblock %}

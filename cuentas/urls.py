@@ -2,6 +2,8 @@ from django.urls import path
 from django.contrib.auth import views as auth_views
 from . import views
 
+app_name = 'cuentas'
+
 urlpatterns = [
     path('registracion/medico', views.RegistracionMedico, name='registracion_medico'),
     path('editar/perfil/medico', views.EditarPerfilMedico, name='editar_perfil_medico'),

@@ -1,99 +1,46 @@
 {% extends 'base.html' %}
-
+{% load crispy_forms_tags %}
 
 {% block content %}
-{% comment %} {% load crispy_forms_tags %} {% endcomment %}
 
-        
-            <div class="row justify-content-center mt-4 mb-4">
-                <center><h1>{% block title %} Registración Médicos {% endblock  %}</h1></center>            
-            </div>
-
-                {% for message in messages %}
-                    {% comment %} <div class="alert alert-{{ message.tags }} text-center" role="alert"> {% endcomment %}
-                        <div class="alert alert-primary text-center mr-3" role="alert">
-                        {{ message }}
-                    </div>
-                {% endfor %}
-                
-
-            <form novalidate method="POST" class="form-group" action="">
-                {% csrf_token %}
-                <div class="row justify-content-center">
-                    <div class="col-md-6 ml-1">
-                        <label for="fname" class="form-label ml-3 mt-3">Nombre</label>
-                        {{form.first_name}}
-                        {{form.first_name.errors}}
-                    </div>
-                    <div class="col-md-6 ml-1">
-                        <label for="lname" class="form-label ml-3 mt-3">Apellido</label>
-                        {{form.last_name}}
-                        {{form.last_name.errors}}
-                    </div>
-                    <div class="col-6 ml-1">
-                        <label for="username" class="form-label ml-3 mt-3">Nombre de usuario</label>
-                        {{form.username}}
-                        {{form.username.errors}}
-                    </div>
-                    <div class="col-6 ml-0">
-                        <label for="inputAddress2" class="form-label ml-3 mt-3">E-mail</label>
-                        {{form.email}}
-                        {{form.email.errors}}
-                    </div>
-                    <div class="col-6 ml-1">
-                        <label for="password1" class="form-label ml-3 mt-3">Contraseña</label>
-                        {{form.password1}}
-                        {{form.password1.errors}}
-                    </div>
-                    <div class="col-6 ml-0">
-                        <label for="confirm password" class="form-label ml-3 mt-3">Confirmación Contraseña</label>
-                        {{form.password2}}
-                        {{form.password2.errors}}
+<section class="container">
+    <div class="row justify-content-center mt-4 mb-4">
+        <h1 class="text-center">{% block title %} Registración Médicos {% endblock %}</h1>
+    </div>
+    {% for message in messages %}
+        <div class="alert alert-primary text-center mr-3" role="alert">
+            {{ message }}
+        </div>
+    {% endfor %}
+    
+        <form novalidate method="POST" class="form-group py-4" action="">
+            {% csrf_token %}
+    
+            <div class="w-100 d-flex flex-column flex-md-row flex-wrap" >
+                <div class="col col-md-6">
+                    <div class="mw-100 px-3">
+                        {{form.visible_fields|slice:":4"|crispy}}
                     </div>
                 </div>
-                    {% comment %} <div class="row justify-content-center ml-5 mt-4 mb-0 mr-5"> {% endcomment %}
-                        {% comment %} {% for message in messages %} {% endcomment %}
-                            {% comment %} <p id="messages">{{message}}</p> {% endcomment %}
-                        {% comment %} {% endfor %} {% endcomment %}
-                        {% comment %} {{form.password2.errors}} {% endcomment %}
-                    {% comment %} </div> {% endcomment %}
-                    <div class="text-center">
-                        <button type="submit" class="btn btn-primary ml-5 mt-5 mb-3 mr-5">Creación de usuario</button>
+                <div class="col col-md-6">
+                    <div class="mw-100 px-3">
+                        {{form.visible_fields|slice:"4:"|crispy}}
                     </div>
-                    <div class="mt-2">
-                        <div class="d-flex justify-content-center links">
-                            ¿tiene una cuenta? <a href="{% url 'login' %}" class="ml-2 mb-4">Login</a>
-                        </div>
-                    </div>
-            </form>
+                </div>
+            </div>
+    
+            <div class="mt-2">
+                <div class="d-flex justify-content-center links">
+                    <span class="mx-1">¿Tenes una cuenta? Cliqueá </span>
+                    <a href="{% url 'cuentas:login' %}" class="ml-2 mb-4"> acá</a>
+                </div>
+            </div>
 
-            {% comment %} <form method="POST" class="form-group"> {% endcomment %}
-                {% comment %} {% csrf_token %} {% endcomment %}
-                {% comment %} {{ form | crispy }} {% endcomment %}
-                {% comment %} {{form.as_p}} {% endcomment %}
+            <div class="d-flex justify-content-center w-100">
+                <button type="submit" class="btn btn-primary w-50">Registrarse</button>
+            </div>
+        </form>
+    
+</section>
 
-                {% comment %} {{form.username.label}} {% endcomment %}
-                {% comment %} {{form.username}} {% endcomment %}
-
-                {% comment %} {{form.email.label}} {% endcomment %}
-                {% comment %} {{form.email}} {% endcomment %}
-
-                {% comment %} {{form.password1.label}} {% endcomment %}
-                {% comment %} {{form.password1}} {% endcomment %}
-
-                {% comment %} {{form.password2.label}} {% endcomment %}
-                {% comment %} {{form.password2}} {% endcomment %}
-                
-
-                {% comment %} {% for field in form %} {% endcomment %}
-                    {% comment %} {{ field.label }} {% endcomment %}
-                    {% comment %} {{ field }} {% endcomment %}
-                {% comment %} {% endfor %} {% endcomment %}
-                {% comment %} {{ form }} {% endcomment %}
-
-                {% comment %} <input type="submit" name="Create User"> {% endcomment %}
-                {% comment %} <button type="submit" class="btn btn-success">Register</button> {% endcomment %}
-            {% comment %} </form> {% endcomment %}
-        
-{% endblock  %}
-
+{% endblock %}

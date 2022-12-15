@@ -7,7 +7,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import Group
 # from django.views.generic.edit import DeleteView, UpdateView
 from cuentas.decorators import unauthenticated_user, allowed_users
-from .forms import RegistracionMedicoForm, RegistracionPacientesForm,LoginForm, EditarPerfilMedicoForm,EditarPerfilPacienteForm, EditarProfileForm
+from .forms import RegistracionMedicoForm, RegistracionPacientesForm,LoginForm, EditarPerfilMedicoForm,EditarPerfilPacienteForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
@@ -52,23 +52,17 @@ def RegistracionMedico(request):
 @allowed_users(allowed_roles=['medico'])
 def EditarPerfilMedico(request):
     if request.method == 'POST':
-        u_form = EditarPerfilMedicoForm(request.POST, instance=request.user)
-        p_form = EditarProfileForm(request.POST, request.FILES, instance=request.user.profile)
-
-        if u_form.is_valid() and p_form.is_valid():
-            u_form.save()
-            p_form.save()
+        form = EditarPerfilMedicoForm(request.POST, request.FILES, instance=request.user)
+        if form.is_valid():
+            form.save()
             messages.success(request, f'Los cambios fueron guardados correctamente')
-            return redirect('/editar/perfil/medico')
-    
+            return redirect('cuentas:editar_perfil_medico')
     else:
-        u_form = EditarPerfilMedicoForm(instance=request.user)
-        p_form = EditarProfileForm(instance=request.user.profile)
-
+        form = EditarPerfilMedicoForm(instance=request.user)
     context = {
-        'u_form' : u_form,
-        'p_form' : p_form,
+        'form' : form,
     }
+
 
     return render(request, 'cuentas/medicos/editar-perfil-medico.html', context)
 
@@ -100,22 +94,15 @@ def RegistracionPaciente(request):
 @allowed_users(allowed_roles=['paciente'])
 def EditarPerfilPaciente(request):
     if request.method == 'POST':
-        u_form = EditarPerfilPacienteForm(request.POST, instance=request.user)
-        p_form = EditarProfileForm(request.POST, request.FILES, instance=request.user.profile)
-
-        if u_form.is_valid() and p_form.is_valid():
-            u_form.save()
-            p_form.save()
+        form = EditarPerfilPacienteForm(request.POST, request.FILES, instance=request.user)
+        if form.is_valid():
+            form.save()
             messages.success(request, f'Los cambios fueron guardados correctamente')
-            return redirect('/editar/perfil/paciente')
-    
+            return redirect('cuentas:editar_perfil_paciente')
     else:
-        u_form = EditarPerfilPacienteForm(instance=request.user)
-        p_form = EditarProfileForm(instance=request.user.profile)
-
+        form = EditarPerfilPacienteForm(instance=request.user)
     context = {
-        'u_form' : u_form,
-        'p_form' : p_form
+        'form' : form,
     }
 
     return render(request, 'cuentas/pacientes/editar-perfil-paciente.html', context)
