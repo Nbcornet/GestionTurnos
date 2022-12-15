@@ -1,5 +1,5 @@
 from django import forms
-from .models import Agenda, Especialidades
+from .models import Agenda, Especialidades, Hospitales, Turno
 from datetime import datetime
 
 class AgendaForm(forms.ModelForm):
@@ -18,16 +18,20 @@ class AgendaForm(forms.ModelForm):
         self.fields['fecha_inicio'].widget.attrs['min'] = datetime.now().strftime('%Y-%m-%d')
         self.fields['fecha_fin'].widget.attrs['min'] = datetime.now().strftime('%Y-%m-%d')
 
-    # add another field call days
+    # add another field call day
+    hospital = forms.ModelChoiceField(queryset=Hospitales.objects.all())
+    especialidad = forms.ModelChoiceField(queryset=Especialidades.objects.all())
+
     days_choices = (
-        ('Monday', 'Monday'),
-        ('Tuesday', 'Tuesday'),
-        ('Wednesday', 'Wednesday'),
-        ('Thursday', 'Thursday'),
-        ('Friday', 'Friday'),
-        ('Saturday', 'Saturday'),
-        ('Sunday', 'Sunday'),
+        ('Monday', 'Lunes'),
+        ('Tuesday', 'Martes'),
+        ('Wednesday', 'Miercoles'),
+        ('Thursday', 'Jueves'),
+        ('Friday', 'Viernes'),
+        ('Saturday', 'Sabado'),
+        ('Sunday', 'Domingo'),
     )
+
     dias = forms.MultipleChoiceField(
         choices=days_choices,
         widget=forms.CheckboxSelectMultiple,
@@ -58,6 +62,7 @@ class AgendaForm(forms.ModelForm):
         ('45', '45'),
         ('60', '60'),
     )
+    
     intervalo = forms.ChoiceField(
         choices=intervalo_choices,
         widget=forms.Select(),
@@ -88,12 +93,41 @@ class AgendaForm(forms.ModelForm):
         return agenda
 
 class EspecialidadesForm(forms.ModelForm):
-    nombre = forms.ModelChoiceField(queryset=Especialidades.objects.values_list('nombre', flat=True), 
-                                    label='Especialidad',
-                                    initial={'nombre':'Dentistry'})
 
     class Meta:
         model = Especialidades
         fields = ["nombre"]
 
 
+    nombre = forms.ModelChoiceField(queryset=Especialidades.objects.values_list('nombre', flat=True), 
+                                    widget=forms.Select(attrs={'class': 'form-select form-select'}),
+                                    label='Especialidad',
+                                    initial={'nombre':'Dentistry'})
+
+
+class TurnoPacienteForm(forms.ModelForm):
+    
+    class Meta:
+        model = Turno
+        fields = ['mensaje', 'telefono']
+
+    def __init__(self, *args, **kwargs):
+        super(TurnoPacienteForm, self).__init__(*args, **kwargs)
+
+        self.fields['mensaje'].widget.attrs.update({
+            'class': 'form-control',
+            'placeholder': 'describa su síntoma',
+        })
+        self.fields['telefono'].widget.attrs.update({
+            'class': 'form-control', 
+            'placeholder': 'Ingrese su número', 
+        })
+
+    def save(self, commit=True):
+        turno = super(TurnoPacienteForm, self).save(commit=False)
+        turno.user = self.user
+    #     turno.agenda = self.agenda
+         
+        if commit:
+            turno.save()
+        return turno

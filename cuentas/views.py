@@ -93,22 +93,14 @@ def RegistracionPaciente(request):
 @login_required
 @allowed_users(allowed_roles=['paciente'])
 def EditarPerfilPaciente(request):
-    form = RegistracionPacientesForm()
-    if request.method == "POST":
-        form = RegistracionPacientesForm(request.POST)    
+    if request.method == 'POST':
+        form = EditarPerfilPacienteForm(request.POST, request.FILES, instance=request.user)
         if form.is_valid():
-            user = form.save()
-            first_name = form.cleaned_data.get('first_name')
-            # username = form.cleaned_data.get('username')
-            messages.success(request, 'Felicitaciones ' + first_name + '. Su cuenta fue creada')
-
-            group = Group.objects.get(name='paciente')
-            user.groups.add(group)
-
-            return redirect("/login") # redirect "Login"
-        else: 
-            messages.error(request,'Los datos ingresados son incorrectos ')
-
+            form.save()
+            messages.success(request, f'Los cambios fueron guardados correctamente')
+            return redirect('cuentas:editar_perfil_paciente')
+    else:
+        form = EditarPerfilPacienteForm(instance=request.user)
     context = {
         'form' : form,
     }

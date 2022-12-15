@@ -3,14 +3,13 @@ from cuentas.models import User
 # Create your models here.
 
 department = (
-    ('Dentistry', "Dentistry"),
-    ('Cardiology', "Cardiology"),
-    ('ENT Specialists', "ENT Specialists"),
-    ('Astrology', 'Astrology'),
-    ('Neuroanatomy', 'Neuroanatomy'),
-    ('Blood Screening', 'Blood Screening'),
-    ('Eye Care', 'Eye Care'),
-    ('Physical Therapy', 'Physical Therapy'),
+    ('Dentista', "Dentista"),
+    ('Cardiología', "Cardiología"),
+    ('Traumatología', "Traumatología"),
+    ('Neurología', 'Neurología'),
+    ('Dermatología', 'Dermatología'),
+    ('Oftalmología', 'Oftalmología'),
+    ('Pedicuría', 'Pedicuría'),
 )
 
 hospitales = (
@@ -22,10 +21,15 @@ hospitales = (
     ('Hospital de Clínicas de la Universidad de Buenos Aires', 'Hospital de Clínicas de la Universidad de Buenos Aires'),
 )
 
+class Hospitales(models.Model):
+    nombre = models.CharField(max_length=100, choices=hospitales, default='Hospital de Niños')
+    direccion = models.CharField(max_length=100)
+    def __str__(self):
+        return self.nombre
+
 class Especialidades(models.Model):
     nombre = models.CharField(max_length=100, choices=department)
-    codigo = models.IntegerField(unique=True)
-    descripcion = models.TextField(max_length=500)
+    descripcion = models.TextField(max_length=1000, blank=True, null=True)
 
     def __str__(self):
         return self.nombre
@@ -33,10 +37,13 @@ class Especialidades(models.Model):
 class Agenda(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     fecha = models.DateTimeField(default='2021-10-10 10:00:00')
-    hospital = models.CharField(choices=hospitales, max_length=250)
-    especialidad = models.CharField(choices=department, max_length=250)
+    hospital = models.ForeignKey(Hospitales, on_delete=models.CASCADE)
+    especialidad = models.ForeignKey(Especialidades, on_delete=models.CASCADE)
     creado = models.DateTimeField(auto_now_add=True)
     is_deleted = models.BooleanField(default=0)
+
+    class Meta:
+        unique_together = ("user", "fecha", "hospital")
 
     def __str__(self):
         return f'{self.user.first_name} {self.user.last_name}'
@@ -52,10 +59,19 @@ class Agenda(models.Model):
 
 class Turno(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    agenda = models.ForeignKey(Agenda, on_delete=models.CASCADE)
+    agenda = models.ForeignKey(Agenda, on_delete=models.CASCADE, null=True)
     mensaje = models.TextField()
     telefono = models.CharField(max_length=120)
     creado = models.DateTimeField(auto_now_add=True)
+    is_deleted = models.BooleanField(default=0)
 
     def __str__(self):
         return f'{self.user.first_name} {self.user.last_name}'
+
+    def soft_delete(self):
+        self.is_deleted=True
+        super().save()
+    
+    def restore(self):
+        self.is_deleted=False
+        super().save()

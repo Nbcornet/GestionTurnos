@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<section class="container">
+    <div class="d-flex justify-content-between align-items-center mt-4 mb-2">
+        <h1>Mis Pacientes</h1>
+        <a href="{% url 'gestion:index' %}" class="btn btn-primary">Volver</a>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">Paciente</th>
+                        <th scope="col">Hospital</th>
+                        <th scope="col">Especialidad</th>
+                        <th scope="col">Fecha</th>
+                        <th scope="col">Hora</th>
+                        <th scope="col">Mensaje</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for turno in turnos %}
+                            
+                        <tr>
+                            
+                            <td>{{ turno.user__first_name }} {{ turno.user__last_name }}</td>
+                            <td>{{ turno.agenda__hospital__nombre }}</td>
+                            <td>{{ turno.agenda__especialidad__nombre }}</td>
+                            <td>{{ turno.agenda__fecha|date:"d/m/y" }}</td>
+                            <td>{{ turno.agenda__fecha|date:"H:i:s" }}</td>
+                            <td>{{ turno.mensaje }}</td>
+                            
+                            <td>
+                                <a href="{% url 'gestion:eliminar_turno' turno.id %}" class="btn btn-danger">Cancelar Consulta</a>
+                            </td>
+                        </tr>
+                        
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</section>
+
+{% endblock  %} 
