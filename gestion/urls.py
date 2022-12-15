@@ -15,10 +15,3 @@ urlpatterns = [
     path('mis_turnos/eliminar/<int:id_turno>', views.eliminar_turno, name='eliminar_turno'),
     path('mis_pacientes/', views.MisPacientesLista.as_view(), name='mis_pacientes'),
 ]
-
-urlpatterns = [
-    path('', views.index, name='index'),
-    path('create/', views.create, name='create'),
-    path('<int:id>/', views.detail, name='detail'),
-    path('<int:id>/update/', views.update, name='update'),
-]
